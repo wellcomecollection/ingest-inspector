@@ -1,0 +1,3 @@
+Flask
+gunicorn
+wellcome_storage_service

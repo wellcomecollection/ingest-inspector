@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <p>Ingest ID:</p>
+
+  <input type="text" id="ingestId" placeholder="123e4567-e89b-12d3-a456-426655440000" autofocus spellcheck="false" size="36">
+
+  <script>
+    function load_ingest() {
+      var ingestId = document.getElementById("ingestId").value;
+      document.location.href = "/ingests/" + ingestId;
+    }
+  </script>
+
+  <button type="button" class="btn btn-primary" onclick="load_ingest();">
+    Look up ingest
+  </button>
+{% endblock %}

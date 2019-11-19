@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <p>
+    Found ingest <strong>{{ ingest.id }}</strong> in the <strong>{{ api }}</strong> API:
+  </p>
+
+  {% set status = ingest.status.id %}
+
+  {% if status == "succeeded" %}
+    {% set accent = "success" %}
+  {% elif status == "failed" %}
+    {% set accent = "danger" %}
+  {% elif status == "accepted" %}
+    {% set accent = "warning" %}
+  {% elif status == "processing" %}
+    {% set accent = "info" %}
+  {% endif %}
+
+  <div class="card border-{{ accent }}">
+    <div class="card-header
+      {% if api == 'production' %}
+        bg-{{ accent }} text-white
+      {% else %}
+        text-{{ accent }}
+      {% endif %}
+    ">{{ ingest.id }}: {{ status }}</div>
+    <div class="card-body">
+      <table>
+        <tr>
+          <th>source location:</th>
+          <td>
+            {% set bucket = ingest.sourceLocation.bucket %}
+            {% set path = ingest.sourceLocation.path %}
+            <a href="https://console.aws.amazon.com/s3/object/{{ bucket }}/{{ path }}?tab=overview" target="_blank">s3://{{ bucket }}/{{ path }}</a>
+          </td>
+        </tr>
+
+        <tr>
+          <th>storage space:</th>
+          <td>{{ ingest.space.id }}</td>
+        </tr>
+
+        <tr>
+          <th>external identifier:</th>
+          <td>{{ ingest.bag.info.externalIdentifier }}</td>
+        </tr>
+
+        <tr>
+          <th>version:</th>
+          <td>
+            {% set version = ingest.bag.info.get("version") %}
+            {% if version %}
+              {{ version }}
+            {% else %}
+              (none assigned)
+            {% endif %}
+          </td>
+        </tr>
+
+        <tr>
+          <th>created date:</th>
+          <td>{{ ingest.createdDate | format_date }}</td>
+        </tr>
+
+        <tr>
+          <th>last update:</th>
+          <td>{{ ingest | last_update }}</td>
+        </tr>
+
+        <tr>
+          <th>events:</th>
+          <td>
+            <ul>
+            {% for ev in ingest.events %}
+              <li>{{ ev.description }}</li>
+            {% endfor %}
+            </ul>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+{% endblock %}
