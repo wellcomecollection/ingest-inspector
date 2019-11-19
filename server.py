@@ -80,36 +80,36 @@ def lookup_ingest(ingest_id):
         except IngestNotFound:
             return render_template(
                 "not_found.html",
-                title=f"Could not find {ingest_id}",
+                title="Could not find %s" % ingest_id,
                 ingest_id=ingest_id
             )
         except Exception as err:
-            print(f"Looking up {ingest_id}: {err}")
+            print("Looking up %s: %s" % (ingest_id, err))
             return render_template(
                 "error.html",
-                title=f"Error looking up {ingest_id}",
+                title="Error looking up %s" % ingest_id,
                 ingest_id=ingest_id
             )
         else:
             return render_template(
                 "ingest.html",
-                title=f"Ingest {ingest_id}",
+                title="Ingest %s" % ingest_id,
                 ingest=ingest,
                 api="staging"
             )
 
     except Exception:
-        print(f"Looking up {ingest_id}: {err}")
+        print("Looking up %s: %s" % (ingest_id, err))
         return render_template(
             "error.html",
-            title=f"Error looking up {ingest_id}",
+            title="Error looking up %s" % ingest_id,
             ingest_id=ingest_id
         )
 
     else:
         return render_template(
             "ingest.html",
-            title=f"Ingest {ingest_id}",
+            title="Ingest %s" % ingest_id,
             ingest=ingest,
             api="production"
         )
