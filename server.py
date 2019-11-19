@@ -1,5 +1,6 @@
 # -*- encoding: utf-8
 
+import datetime as dt
 import os
 
 from flask import Flask, request, render_template, jsonify
@@ -30,9 +31,43 @@ def index_page():
 @app.template_filter("last_update")
 def last_update(ingest):
     try:
-        return max(ingest["events"], key=lambda ev: ev["createdDate"])["createdDate"]
+        last_event = max(ingest["events"], key=lambda ev: ev["createdDate"])
     except IndexError:
         return ""
+
+    last_event_date = last_event["createdDate"]
+
+    delta = dt.datetime.utcnow() - dt.datetime.strptime(
+        last_event_date, "%Y-%m-%dT%H:%M:%S.%fZ"
+    )
+
+    last_event_date_string = format_date(last_event_date)
+
+    if delta.seconds < 5:
+        return "%s (just now)" % last_event_date_string
+    elif delta.seconds < 60:
+        return "%s (%d seconds ago)" % (last_event_date_string, delta.seconds)
+    elif 60 <= delta.seconds < 120:
+        return "%s (1 minute ago)" % last_event_date_string
+    elif delta.seconds < 60 * 60:
+        return "%s (%d minutes ago)" % (last_event_date_string, int(delta.seconds / 60))
+    else:
+        return last_event_date_string
+
+
+@app.template_filter("format_date")
+def format_date(date_string):
+    if not date_string:
+        return ""
+
+    d = dt.datetime.strptime(date_string, "%Y-%m-%dT%H:%M:%S.%fZ")
+
+    if d.date() == dt.datetime.now().date():
+        return d.strftime("today @ %H:%M")
+    elif d.date() == (dt.datetime.now() - dt.timedelta(days=1)).date():
+        return d.strftime("yesterday @ %H:%M")
+    else:
+        return d.strftime("%Y-%m-%d @ %H:%M")
 
 
 @app.route("/ingests/<ingest_id>")

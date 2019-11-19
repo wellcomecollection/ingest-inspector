@@ -60,12 +60,12 @@
 
         <tr>
           <th>created date:</th>
-          <td>{{ ingest.createdDate }}</td>
+          <td>{{ ingest.createdDate | format_date }}</td>
         </tr>
 
         <tr>
           <th>last update:</th>
-          <td>{{ ingest|last_update }}</td>
+          <td>{{ ingest | last_update }}</td>
         </tr>
 
         <tr>
