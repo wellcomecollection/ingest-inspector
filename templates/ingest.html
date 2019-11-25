@@ -73,7 +73,7 @@
           <td>
             <ul>
             {% for ev in ingest.events %}
-              <li>{{ ev.description }}</li>
+              <li>{% if "failed" in ev.description %}<strong>{{ ev.description }}</strong>{% else %}{{ ev.description }}{% endif %}</li>
             {% endfor %}
             </ul>
           </td>
