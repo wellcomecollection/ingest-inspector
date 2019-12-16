@@ -32,7 +32,7 @@ def index_page():
 def last_update(ingest):
     try:
         last_event = max(ingest["events"], key=lambda ev: ev["createdDate"])
-    except IndexError:
+    except ValueError:
         return ""
 
     last_event_date = last_event["createdDate"]
