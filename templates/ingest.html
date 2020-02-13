@@ -80,11 +80,12 @@
         </tr>
       </table>
       
-      <details>
+      <!-- Commented out because Archivematica sends API credentials in the callback URL -->
+      <!-- <details>
         <summary>Ingests API response (JSON)</summary>
         
         <pre><code>{{ ingest | tojson(indent=2) }}</code></pre>
-      </details>
+      </details> -->
     </div>
   </div>
 {% endblock %}
