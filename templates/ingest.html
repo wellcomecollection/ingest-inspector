@@ -67,6 +67,13 @@
           <th>last update:</th>
           <td>{{ ingest | last_update }}</td>
         </tr>
+        
+        {% if "callback" in ingest %}
+        <tr>
+          <th>callback status:</th>
+          <td>{{ ingest["callback"]["status"]["id"] }}</td>
+        </tr>
+        {% endif %}
 
         <tr>
           <th>events:</th>
