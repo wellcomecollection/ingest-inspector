@@ -7,63 +7,22 @@
     <title>{{ title }}</title>
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
-
-    <style>
-      .card-header {
-        font-weight: bold;
-      }
-
-      .navbar {
-        margin-bottom: 1em;
-      }
-
-      ul {
-        list-style-type: none;
-        margin: 0;
-        padding: 0;
-      }
-
-      th {
-        padding-right: 8px;
-        text-align: right;
-        vertical-align: top;
-        min-width: 170px;
-      }
-
-      .card {
-        margin-bottom: 1em;
-      }
-      
-      table {
-/*         margin-bottom: 1em */
-      }
-      
-      pre {
-        margin-bottom: 0;
-        margin-top: 1em;
-        background: #fafafa;
-        border: 1px solid #bbb;
-        padding: 1em;
-        border-radius: 5px;
-      }
-      
-      code {
-        font-size: 87.5%;
-      }
-    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
   </head>
   <body>
     <nav class="navbar navbar-dark bg-dark">
       <div class="container">
-        <a class="navbar-brand" href="/">Ingest inspector</a>
+        <a class="navbar-brand" href="/">ingest inspector</a>
       </div>
     </nav>
 
     <div class="container">
       {% block content %}{% endblock %}
-      
+
       <p>
-        Source <a href="https://glitch.com/~wellcome-ingest-inspector">on Glitch</a>
+        made with 💚 •
+        source on <a href="https://github.com/wellcomecollection/ingest-inspector">GitHub</a> •
+        hosted on <a href="https://glitch.com/~wellcome-ingest-inspector">glitch</a>
       </p>
     </div>
   </body>

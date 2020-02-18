@@ -1,0 +1,24 @@
+.card-header {
+  font-weight: bold;
+}
+
+.navbar {
+  margin-bottom: 1em;
+}
+
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+th {
+  padding-right: 8px;
+  text-align: right;
+  vertical-align: top;
+  min-width: 170px;
+}
+
+.card {
+  margin-bottom: 1em;
+}
