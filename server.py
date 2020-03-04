@@ -24,7 +24,7 @@ staging_api = StorageServiceClient(
 
 
 @app.route("/")
-def index_page():
+def index():
     return render_template("index.html", title="Look up an ingest")
 
 
@@ -98,7 +98,7 @@ def lookup_ingest(ingest_id):
                 api="staging"
             )
 
-    except Exception:
+    except Exception as err:
         print("Looking up %s: %s" % (ingest_id, err))
         return render_template(
             "error.html",

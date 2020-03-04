@@ -4,26 +4,47 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <title>{{ title }}</title>
-
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <script src="{{ url_for('static', filename='ingest_inspector.js') }}"></script>
+
+    <title>{{ title }}</title>
   </head>
   <body>
-    <nav class="navbar navbar-dark bg-dark">
-      <div class="container">
-        <a class="navbar-brand" href="/">ingest inspector</a>
+    <aside {% if ingest %}class="status-{{ ingest.status.id }}"{% endif %}>
+      <div class="content">
+        <a href="{{ url_for('index') }}">wellcome ingest inspector</a>
       </div>
-    </nav>
+    </aside>
 
-    <div class="container">
-      {% block content %}{% endblock %}
+    <main>
+      <div class="content">
+        <label for="ingestId">Ingest ID:</label>
+        <input type="text" name="ingestId"
+          id="ingestId"
+          placeholder="123e4567-e89b-12d3-a456-426655440000"
+          {% if ingest %}value="{{ ingest.id }}"{% endif %}
+          autofocus spellcheck="false" size="36">
+        <button onclick="load_ingest();"
+          {% if ingest %}class="status-{{ ingest.status.id }}"{% endif %}
+        >Look up ingest</button>
 
-      <p>
-        made with 💚 •
-        source on <a href="https://github.com/wellcomecollection/ingest-inspector">GitHub</a> •
-        hosted on <a href="https://glitch.com/~wellcome-ingest-inspector">glitch</a>
-      </p>
-    </div>
+        {% if ingest %}
+        <hr/>
+        {% endif %}
+
+        {% block content %}{% endblock %}
+      </div>
+    </main>
+
+    <footer>
+      <div class="content">
+        <p>
+          made with <span class="heart {% if ingest %}status-{{ ingest.status.id }}{% endif %}">♥</span> •
+          source on <a href="https://github.com/wellcomecollection/ingest-inspector">GitHub</a> •
+          hosted on <a href="https://glitch.com/~wellcome-ingest-inspector">glitch</a>
+        </p>
+      </div>
+    </footer>
   </body>
 </html>

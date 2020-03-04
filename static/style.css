@@ -1,16 +1,188 @@
-.card-header {
-  font-weight: bold;
+body {
+  font: 12pt 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  color: #121212;
+  line-height: 1.5;
+  margin: 0;
 }
 
-.navbar {
+div.content {
+  max-width: 950px;
+  margin-left:  auto;
+  margin-right: auto;
+  padding-left:  1em;
+  padding-right: 1em;
+}
+
+@font-face {
+  font-family: Wellcome;
+  src: url(https://wellcome.ac.uk/sites/all/themes/corp_base/assets/fonts/wellcome-bold-webfont.woff2);
+}
+
+aside {
+  background-color: #FEC200;  /* runny yolk */
+  font: 18pt Wellcome, sans-serif;
+  padding-top:    0.5em;
+  padding-bottom: 0.5em;
+  border-bottom: 5px solid black;
   margin-bottom: 1em;
 }
 
-ul {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
+aside a, aside a:visited {
+  color: black;
+  text-decoration: none;
 }
+
+aside.status-succeeded {
+  background-color: #4C8026;  /* sherwood 2 */;
+}
+
+aside.status-processing {
+  background-color: #009BB2;  /* bora bora */
+}
+
+aside.status-failed {
+  background-color: #E10F2D;  /* brogues 3 */
+}
+
+aside a:hover {
+  text-decoration: underline;
+  background: none;
+}
+
+aside a:visited:hover {
+  background: none;
+}
+
+a:hover {
+  text-decoration: none;
+}
+
+hr {
+  background-color: #ddd;
+  height: 1px;
+  border: 0px;
+}
+
+label, input, button {
+  font-size: 120%;
+}
+
+button {
+  background: #FEC200;  /* runny yolk */
+  border: none;
+  padding: 6px 12px;
+  color: black;
+  border-radius: 4px;
+}
+
+button.status-succeeded {
+  background: #4C8026;  /* sherwood 2 */
+  color: white;
+}
+
+button.status-processing {
+  background: #009BB2;  /* bora bora */
+  color: white;
+}
+
+button.status-failed {
+  background: #E10F2D;  /* brogues 3 */
+  color: white;
+}
+
+button.status-accepted {
+  background: #FEC200;  /* runny yolk */
+  color: black;
+}
+
+.card {
+  margin-bottom: 1em;
+  border: 3px solid;
+  border-radius: 10px;
+}
+
+.card-header {
+  padding: 0.5em 0.75em;
+  font-size: 120%;
+}
+
+.card-body {
+  padding: 0.75em;
+}
+
+.card.status-succeeded {
+  border-color: #4C8026;  /* sherwood 2 */
+}
+
+.card.status-succeeded a {
+  color: #4C8026;  /* sherwood 2 */
+}
+
+.card.status-processing {
+  border-color: #009BB2;  /* bora bora */
+}
+
+.card.status-processing a {
+  color: #009BB2;  /* bora bora */
+}
+
+.card.status-failed {
+  border-color: #E10F2D;  /* brogues 3 */
+}
+
+.card.status-failed a {
+  color: #E10F2D;  /* brogues 3 */
+}
+
+.card.status-accepted {
+  border-color: #FEC200;  /* runny yolk */
+}
+
+.card.status-accepted a {
+  color: #C29207;
+}
+
+.card .card-header.api-staging {
+  border-bottom: 3px solid;
+  font-weight: bold;
+}
+
+.card.status-succeeded .card-header.api-production {
+  background: #4C8026;  /* sherwood 2 */
+  color: white;
+}
+
+.card.status-succeeded .card-header.api-staging {
+  color: #4C8026;  /* sherwood 2 */
+}
+
+.card.status-processing .card-header.api-production {
+  background: #009BB2;  /* bora bora */
+  color: white;
+}
+
+.card.status-processing .card-header.api-staging {
+  color: #009BB2;  /* bora bora */
+}
+
+.card.status-failed .card-header.api-production {
+  background: #E10F2D;  /* brogues 3 */
+  color: white;
+}
+
+.card.status-failed .card-header.api-staging {
+  color: #E10F2D;  /* brogues 3 */
+}
+
+.card.status-accepted .card-header.api-production {
+  background: #FEC200;  /* runny yolk */
+  color: black;
+}
+
+.card.status-accepted .card-header.api-staging {
+  color: #C29207;
+}
+
 
 th {
   padding-right: 8px;
@@ -19,6 +191,40 @@ th {
   min-width: 170px;
 }
 
-.card {
-  margin-bottom: 1em;
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+footer {
+  border-top: 0.5px solid #ddd;
+  margin-top:    2em;
+  margin-bottom: 2em;
+  color: #777;
+  font-size: 75%;
+}
+
+footer a, footer a:visited {
+  color: #777;
+}
+
+footer .heart {
+  font-size: 140%;
+}
+
+footer .heart.status-succeeded {
+  color: #4C8026;  /* sherwood 2 */
+}
+
+footer .heart.status-processing {
+  color: #009BB2;  /* bora bora */
+}
+
+footer .heart.status-failed {
+  color: #E10F2D;  /* brogues 3 */
+}
+
+footer .heart.status-accepted {
+  color: #FEC200;  /* runny yolk */
 }

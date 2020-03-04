@@ -17,14 +17,8 @@
     {% set accent = "info" %}
   {% endif %}
 
-  <div class="card border-{{ accent }}">
-    <div class="card-header
-      {% if api == 'production' %}
-        bg-{{ accent }} text-white
-      {% else %}
-        text-{{ accent }}
-      {% endif %}
-    ">{{ ingest.id }}: {{ status }}</div>
+  <div class="card status-{{ status }}">
+    <div class="card-header api-{{ api }}">{{ ingest.id }}: {{ status }}</div>
     <div class="card-body">
       <table>
         <tr>
@@ -67,7 +61,7 @@
           <th>last update:</th>
           <td>{{ ingest | last_update }}</td>
         </tr>
-        
+
         {% if "callback" in ingest %}
         <tr>
           <th>callback status:</th>
@@ -86,11 +80,11 @@
           </td>
         </tr>
       </table>
-      
+
       <!-- Commented out because Archivematica sends API credentials in the callback URL -->
       <!-- <details>
         <summary>Ingests API response (JSON)</summary>
-        
+
         <pre><code>{{ ingest | tojson(indent=2) }}</code></pre>
       </details> -->
     </div>
