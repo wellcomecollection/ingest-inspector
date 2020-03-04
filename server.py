@@ -28,6 +28,38 @@ def index():
     return render_template("index.html", title="Look up an ingest")
 
 
+@app.template_filter("s3_url")
+def s3_url(source_location):
+    bucket = source_location["bucket"]
+    key = source_location["path"]
+
+    return (
+        f"https://s3.console.aws.amazon.com/s3/buckets/{bucket}"
+        f"/{os.path.dirname(key)}/?tab=overview&prefixSearch={os.path.basename(key)}"
+        f"&region=eu-west-1"
+    )
+
+
+@app.template_filter("display_s3_url")
+def display_s3_url(source_location):
+    bucket = source_location["bucket"]
+    key = source_location["path"]
+
+    # The key to an Archivematica source is usually some hideous long path
+    # of the form:
+    #
+    #     born-digital/2199/f389/66f5/4077/bcf7/c14b/0fdc/66cd/SAWTC={uuid}.tar.gz
+    #
+    # Displaying the whole thing is completely unhelpful, so truncate it
+    # to a shorter URL for display purposes.
+    #
+    if "archivematica-ingests" in bucket:
+        top_level, *_, filename = key.split("/")
+        key = f"{top_level}/.../{filename}"
+
+    return f"s3://{bucket}/{key}"
+
+
 @app.template_filter("last_update")
 def last_update(ingest):
     try:

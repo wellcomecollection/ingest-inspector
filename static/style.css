@@ -67,6 +67,10 @@ label, input, button {
   font-size: 120%;
 }
 
+input {
+  max-width: calc(100% - 8px);
+}
+
 button {
   background: #FEC200;  /* runny yolk */
   border: none;
@@ -183,23 +187,19 @@ button.status-accepted {
   color: #C29207;
 }
 
-
-th {
-  padding-right: 8px;
-  text-align: right;
-  vertical-align: top;
-  min-width: 170px;
-}
-
 ul {
   list-style-type: none;
   margin: 0;
   padding: 0;
 }
 
+li {
+  line-height: 1.6em;
+}
+
 footer {
   border-top: 0.5px solid #ddd;
-  margin-top:    2em;
+  margin-top:    4em;
   margin-bottom: 2em;
   color: #777;
   font-size: 75%;
@@ -227,4 +227,40 @@ footer .heart.status-failed {
 
 footer .heart.status-accepted {
   color: #FEC200;  /* runny yolk */
+}
+
+.ingest_data {
+  display: grid;
+  grid-column-gap: 8px;
+  grid-row-gap: 2px;
+  grid-template-columns: 200px auto;
+}
+
+.label {
+  grid-column: 1 / 2;
+  text-align: right;
+  font-weight: bold;
+}
+
+.value {
+  grid-column: 2 / 2;
+}
+
+@media screen and (max-width: 500px) {
+  .ingest_data {
+    grid-template-columns: auto;
+  }
+
+  .label {
+    grid-column: 1 / 1;
+    text-align: left;
+  }
+
+  .value {
+    grid-column: 1 / 1;
+  }
+
+  .value:not(last-child) {
+    margin-bottom: 1.2em;
+  }
 }

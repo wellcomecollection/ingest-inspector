@@ -7,86 +7,65 @@
 
   {% set status = ingest.status.id %}
 
-  {% if status == "succeeded" %}
-    {% set accent = "success" %}
-  {% elif status == "failed" %}
-    {% set accent = "danger" %}
-  {% elif status == "accepted" %}
-    {% set accent = "warning" %}
-  {% elif status == "processing" %}
-    {% set accent = "info" %}
-  {% endif %}
-
   <div class="card status-{{ status }}">
     <div class="card-header api-{{ api }}">{{ ingest.id }}: {{ status }}</div>
     <div class="card-body">
-      <table>
-        <tr>
-          <th>source location:</th>
-          <td>
-            {% set bucket = ingest.sourceLocation.bucket %}
-            {% set path = ingest.sourceLocation.path %}
-            <a href="https://console.aws.amazon.com/s3/object/{{ bucket }}/{{ path }}?tab=overview" target="_blank">s3://{{ bucket }}/{{ path }}</a>
-          </td>
-        </tr>
+      <div class="ingest_data">
+        <div class="label">source location:</div>
+        <div class="value">
+          {% set bucket = ingest.sourceLocation.bucket %}
+          {% set path = ingest.sourceLocation.path %}
+          <a href="{{ ingest.sourceLocation | s3_url }}">{{ ingest.sourceLocation | display_s3_url }}</a>
+        </div>
 
-        <tr>
-          <th>storage space:</th>
-          <td>{{ ingest.space.id }}</td>
-        </tr>
+        <div class="label">storage space:</div>
+        <div class="value">{{ ingest.space.id }}</div>
 
-        <tr>
-          <th>external identifier:</th>
-          <td>{{ ingest.bag.info.externalIdentifier }}</td>
-        </tr>
+        <div class="label">external identifier:</div>
+        <div class="value">{{ ingest.bag.info.externalIdentifier }}</div>
 
-        <tr>
-          <th>version:</th>
-          <td>
-            {% set version = ingest.bag.info.get("version") %}
-            {% if version %}
-              {{ version }}
-            {% else %}
-              (none assigned)
-            {% endif %}
-          </td>
-        </tr>
+        <div class="label">version:</div>
+        <div class="value">
+          {% set version = ingest.bag.info.get("version") %}
+          {% if version %}
+            {{ version }}
+          {% else %}
+            (none assigned)
+          {% endif %}
+        </div>
 
-        <tr>
-          <th>created date:</th>
-          <td>{{ ingest.createdDate | format_date }}</td>
-        </tr>
+        <div class="label">created date:</div>
+        <div class="value">{{ ingest.createdDate | format_date }}</div>
 
-        <tr>
-          <th>last update:</th>
-          <td>{{ ingest | last_update }}</td>
-        </tr>
+        <div class="label">last update:</div>
+        <div class="value">{{ ingest | last_update }}</div>
 
-        {% if "callback" in ingest %}
-        <tr>
-          <th>callback status:</th>
-          <td>{{ ingest["callback"]["status"]["id"] }}</td>
-        </tr>
+        {% if "callback" in ingest and status != "processing" and status != "accepted" %}
+        <div class="label">callback status:</div>
+        <div class="value">{{ ingest.callback.status.id }}</div>
         {% endif %}
 
-        <tr>
-          <th>events:</th>
-          <td>
-            <ul>
-            {% for ev in ingest.events %}
-              <li>{% if "failed" in ev.description %}<strong>{{ ev.description }}</strong>{% else %}{{ ev.description }}{% endif %}</li>
-            {% endfor %}
-            </ul>
-          </td>
-        </tr>
-      </table>
+        <div class="label">events:</div>
+        <div class="value" style="margin-bottom: 0">
+          <ul>
+          {% for ev in ingest.events %}
+            <li>{% if "failed" in ev.description %}<strong>{{ ev.description }}</strong>{% else %}{{ ev.description }}{% endif %}</li>
+          {% endfor %}
+          </ul>
+        </div>
+      </div>
 
-      <!-- Commented out because Archivematica sends API credentials in the callback URL -->
-      <!-- <details>
+      <!--
+        Commented out because Archivematica sends API credentials in the callback URL
+
+        And commented out with Jinja2 comments so we don't expose it in
+        an HTML comment!
+        -->
+      {# <details>
         <summary>Ingests API response (JSON)</summary>
 
         <pre><code>{{ ingest | tojson(indent=2) }}</code></pre>
-      </details> -->
+      </details> #}
     </div>
   </div>
 {% endblock %}
