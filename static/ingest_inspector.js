@@ -36,10 +36,7 @@ function storeNewIngest(ingestId, space, externalIdentifier) {
 function renderRecentIngestsList() {
   const recentIngests = getRecentIngests();
 
-  console.log(recentIngests);
-
-  if (recentIngests !== []) {
-
+  if (recentIngests.length > 0) {
     recentIngestsDiv = document.getElementById("recentIngests");
 
     const paragraph = document.createElement("p");
