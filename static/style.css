@@ -68,7 +68,7 @@ label, input, button {
 }
 
 input {
-  max-width: calc(100% - 8px);
+  max-width: calc(100% - 1em);
 }
 
 button {
