@@ -5,6 +5,14 @@
     Found ingest <strong>{{ ingest.id }}</strong> in the <strong>{{ api }}</strong> API:
   </p>
 
+  <script>
+    storeNewIngest(
+      {{ ingest.id | tojson }},
+      {{ ingest.space.id | tojson }},
+      {{ ingest.bag.info.externalIdentifier | tojson }}
+    )
+  </script>
+
   {% set status = ingest.status.id %}
 
   <div class="card status-{{ status }}">

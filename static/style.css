@@ -187,13 +187,21 @@ button.status-accepted {
   color: #C29207;
 }
 
-ul {
+#recentIngests {
+  font-size: 120%;
+}
+
+#recentIngests a, #recentIngests a:visited {
+  color: #C29207;
+}
+
+.card ul {
   list-style-type: none;
   margin: 0;
   padding: 0;
 }
 
-li {
+.card li {
   line-height: 1.6em;
 }
 
