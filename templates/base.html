@@ -9,6 +9,8 @@
     <script src="{{ url_for('static', filename='ingest_inspector.js') }}"></script>
 
     <title>{{ title }}</title>
+
+    {% block head %}{% endblock %}
   </head>
   <body>
     <aside {% if ingest %}class="status-{{ ingest.status.id }}"{% endif %}>

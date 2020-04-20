@@ -1,5 +1,9 @@
 {% extends "base.html" %}
 
+{% block head %}
+  <meta http-equiv="refresh" content="30"/>
+{% endblock %}
+
 {% block content %}
   <p>
     Found ingest <strong>{{ ingest.id }}</strong> in the <strong>{{ api }}</strong> API:
