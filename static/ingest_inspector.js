@@ -63,24 +63,34 @@ function renderRecentIngestsList() {
 }
 
 const dateFormatter = new Intl.DateTimeFormat(
-  "en-GB", {"year": "numeric", "month": "long", "day": "numeric", "weekday": "short"}
+  [], {"year": "numeric", "month": "long", "day": "numeric", "weekday": "short"}
 )
 
 const timeFormatter = new Intl.DateTimeFormat(
-  "en-GB", {"hour": "numeric", "minute": "numeric", "timeZoneName": "short"}
+  [], {"hour": "numeric", "minute": "numeric", "timeZoneName": "short"}
 )
 
 // Localise a date for the current timezone
 function localiseDateString(ds) {
   const today = new Date();
-  const yesterday = today.setDate(today.getDate() - 1);
+  const yesterday = new Date().setDate(new Date().getDate() - 1);
 
   const date = new Date(Date.parse(ds));
 
+  const isGerman = timeFormatter.resolvedOptions()["locale"] == "de-DE";
+
   if (dateFormatter.format(date) == dateFormatter.format(today)) {
-    return "today @ " + timeFormatter.format(date);
+    if (isGerman) {
+      return "heute @ " + timeFormatter.format(date);
+    } else {
+      return "today @ " + timeFormatter.format(date);
+    }
   } else if (dateFormatter.format(date) == dateFormatter.format(yesterday)) {
-    return "yesterday @ " + timeFormatter.format(date);
+    if (isGerman) {
+      return "gestern @ " + timeFormatter.format(date);
+    } else {
+      return "yesterday @ " + timeFormatter.format(date);
+    }
   } else {
     return dateFormatter.format(date) + " @ " + timeFormatter.format(date);
   }
@@ -93,16 +103,39 @@ function updateDelta(ds) {
   const delta = today - date;
   const deltaSeconds = Math.floor(delta / 1000);
 
-  if (deltaSeconds < 5) {           // 5 seconds
-    return " (just now)";
-  } else if (deltaSeconds < 60) {   // 60 seconds
-    return " (" + deltaSeconds + " seconds)";
-  } else if (deltaSeconds < 2 * 60) {  // 2 minutes
-    return " (1 minute)";
-  } else if (deltaSeconds < 60 * 60) {     // 1 hour
-    return " (" + Math.floor(deltaSeconds / 60) + " minutes)";
+  const isGerman = timeFormatter.resolvedOptions()["locale"] == "de-DE";
+
+  var result;
+
+  if (isGerman) {
+    if (deltaSeconds == 1) {
+      result = "vor 1 Sekunde";
+    } else if (deltaSeconds < 60) {
+      result = "vor " + deltaSeconds + " Sekunde";
+    } else if (deltaSeconds < 2 * 60) {
+      result = "vor 1 Minute";
+    } else if (deltaSeconds < 60 * 60) {
+      result = "vor " + Math.floor(deltaSeconds / 60) + " Minuten";
+    } else {
+      result = ""
+    }
+  } else {
+    if (deltaSeconds < 5) {
+      result = "just now";
+    } else if (deltaSeconds < 60) {
+      result = deltaSeconds + " seconds ago";
+    } else if (deltaSeconds < 2 * 60) {
+      result = "1 minute ago";
+    } else if (deltaSeconds < 60 * 60) {
+      result = Math.floor(deltaSeconds / 60) + " minutes ago";
+    } else {
+      result = ""
+    }
   }
 
-  return ""
+  if (result !== "") {
+    return " (" + result + ")";
+  } else {
+    return "";
+  }
 }
-
