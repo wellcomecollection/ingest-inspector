@@ -68,9 +68,15 @@
           </noscript>
         </div>
 
-        {% if "callback" in ingest and status != "processing" and status != "accepted" %}
-        <div class="label">callback status:</div>
-        <div class="value">{{ ingest.callback.status.id }}</div>
+        {% if "callback" in ingest %}
+        <div class="label callback--{{ ingest.callback.status.id }}">callback status:</div>
+        <div class="value callback--{{ ingest.callback.status.id }}"">
+          {% if ingest.callback.status.id == "processing" %}
+            pending
+          {% else %}
+            {{ ingest.callback.status.id }}
+          {% endif %}
+        </div>
         {% endif %}
 
         <div class="label">events:</div>

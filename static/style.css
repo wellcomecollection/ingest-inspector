@@ -254,6 +254,15 @@ footer .heart.status-accepted {
   grid-column: 2 / 2;
 }
 
+/* Give a strong visual hint that there's still callback stuff to do */
+
+.status-succeeded .callback--processing,
+.status-failed .callback--processing {
+  background: rgba(0, 155, 178, 0.3);
+  padding: 1px 4px;
+  margin: -1px -4px;
+}
+
 @media screen and (max-width: 500px) {
   .ingest_data {
     grid-template-columns: auto;
@@ -270,5 +279,10 @@ footer .heart.status-accepted {
 
   .value:not(last-child) {
     margin-bottom: 1.2em;
+  }
+
+  .status-succeeded .callback--processing.value,
+  .status-failed .callback--processing.value {
+    margin-bottom: calc(1.2em - 2px);
   }
 }
