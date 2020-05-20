@@ -51,6 +51,9 @@
           <script>
             document.getElementById("createdDate").innerHTML = localiseDateString("{{ ingest.createdDate }}");
           </script>
+          <noscript>
+            {{ ingest.createdDate | format_date }}
+          </noscript>
         </div>
 
         <div class="label">last update:</div>
@@ -60,6 +63,9 @@
               localiseDateString("{{ ingest | last_update }}") + updateDelta("{{ ingest | last_update }}")
             );
           </script>
+          <noscript>
+            {{ ingest | last_update | format_date }}
+          </noscript>
         </div>
 
         {% if "callback" in ingest and status != "processing" and status != "accepted" %}

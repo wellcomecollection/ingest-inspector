@@ -70,6 +70,21 @@ def last_update(ingest):
     return last_event["createdDate"]
 
 
+@app.template_filter("format_date")
+def format_date(date_string):
+    if not date_string:
+        return ""
+
+    d = dt.datetime.strptime(date_string, "%Y-%m-%dT%H:%M:%S.%fZ")
+
+    if d.date() == dt.datetime.now().date():
+        return d.strftime("today @ %H:%M")
+    elif d.date() == (dt.datetime.now() - dt.timedelta(days=1)).date():
+        return d.strftime("yesterday @ %H:%M")
+    else:
+        return d.strftime("%Y-%m-%d @ %H:%M")
+
+
 @app.route("/ingests/<ingest_id>")
 def lookup_ingest(ingest_id):
     try:
