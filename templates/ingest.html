@@ -47,10 +47,20 @@
         </div>
 
         <div class="label">created date:</div>
-        <div class="value">{{ ingest.createdDate | format_date }}</div>
+        <div class="value" id="createdDate" title="{{ ingest.createdDate }}">
+          <script>
+            document.getElementById("createdDate").innerHTML = localiseDateString("{{ ingest.createdDate }}");
+          </script>
+        </div>
 
         <div class="label">last update:</div>
-        <div class="value">{{ ingest | last_update }}</div>
+        <div class="value" id="updatedDate" title="{{ ingest | last_update }}">
+          <script>
+            document.getElementById("updatedDate").innerHTML = (
+              localiseDateString("{{ ingest | last_update }}") + updateDelta("{{ ingest | last_update }}")
+            );
+          </script>
+        </div>
 
         {% if "callback" in ingest and status != "processing" and status != "accepted" %}
         <div class="label">callback status:</div>

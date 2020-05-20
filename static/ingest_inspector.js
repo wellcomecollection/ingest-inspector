@@ -61,3 +61,48 @@ function renderRecentIngestsList() {
     recentIngestsDiv.appendChild(ingestList);
   }
 }
+
+const dateFormatter = new Intl.DateTimeFormat(
+  "en-GB", {"year": "numeric", "month": "long", "day": "numeric", "weekday": "short"}
+)
+
+const timeFormatter = new Intl.DateTimeFormat(
+  "en-GB", {"hour": "numeric", "minute": "numeric", "timeZoneName": "short"}
+)
+
+// Localise a date for the current timezone
+function localiseDateString(ds) {
+  const today = new Date();
+  const yesterday = today.setDate(today.getDate() - 1);
+
+  const date = new Date(Date.parse(ds));
+
+  if (dateFormatter.format(date) == dateFormatter.format(today)) {
+    return "today @ " + timeFormatter.format(date);
+  } else if (dateFormatter.format(date) == dateFormatter.format(yesterday)) {
+    return "yesterday @ " + timeFormatter.format(date);
+  } else {
+    return dateFormatter.format(date) + " @ " + timeFormatter.format(date);
+  }
+}
+
+function updateDelta(ds) {
+  const today = new Date();
+  const date = new Date(Date.parse(ds));
+
+  const delta = today - date;
+  const deltaSeconds = Math.floor(delta / 1000);
+
+  if (deltaSeconds < 5) {           // 5 seconds
+    return " (just now)";
+  } else if (deltaSeconds < 60) {   // 60 seconds
+    return " (" + deltaSeconds + " seconds)";
+  } else if (deltaSeconds < 2 * 60) {  // 2 minutes
+    return " (1 minute)";
+  } else if (deltaSeconds < 60 * 60) {     // 1 hour
+    return " (" + Math.floor(deltaSeconds / 60) + " minutes)";
+  }
+
+  return ""
+}
+
