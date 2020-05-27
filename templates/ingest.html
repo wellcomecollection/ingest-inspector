@@ -46,6 +46,19 @@
           {% endif %}
         </div>
 
+        {#
+          If the ingest succeeded, we can link to the bag in S3.
+        #}
+        {% if status == "succeeded" %}
+        <div class="label">bag location:</div>
+        <div class="value">
+          {% set bucket = "wellcomecollection-storage-staging" if api == "staging" else "wellcomecollection-storage" %}
+          <a href="https://s3.console.aws.amazon.com/s3/buckets/{{ bucket }}/{{ ingest.space.id }}/{{ ingest.bag.info.externalIdentifier }}/{{ ingest.bag.info['version'] }}/?region=eu-west-1&tab=overview">
+            s3://{{ bucket }}/{{ ingest.space.id }}/{{ ingest.bag.info.externalIdentifier }}/{{ ingest.bag.info['version'] }}
+          </a>
+        </div>
+        {% endif %}
+
         <div class="label">created date:</div>
         <div class="value" id="createdDate" title="{{ ingest.createdDate }}">
           <script>
