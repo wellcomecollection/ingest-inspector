@@ -50,11 +50,22 @@
           If the ingest succeeded, we can link to the bag in S3.
         #}
         {% if status == "succeeded" %}
-        <div class="label">bag location:</div>
+        <div class="label">bag locations:</div>
         <div class="value">
-          {% set bucket = "wellcomecollection-storage-staging" if api == "staging" else "wellcomecollection-storage" %}
-          <a href="https://s3.console.aws.amazon.com/s3/buckets/{{ bucket }}/{{ ingest.space.id }}/{{ ingest.bag.info.externalIdentifier }}/{{ ingest.bag.info['version'] }}/?region=eu-west-1&tab=overview">
-            s3://{{ bucket }}/{{ ingest.space.id }}/{{ ingest.bag.info.externalIdentifier }}/{{ ingest.bag.info['version'] }}
+          {% set primary_bucket = "wellcomecollection-storage-staging" if api == "staging" else "wellcomecollection-storage" %}
+          {% set glacier_bucket = "wellcomecollection-storage-staging-replica-ireland" if api == "staging" else "wellcomecollection-storage-replica-ireland" %}
+
+          {% set space = ingest.space.id %}
+          {% set path = "/".join([ingest.space.id, ingest.bag.info.externalIdentifier, ingest.bag.info['version']]) %}
+
+          <a href="https://s3.console.aws.amazon.com/s3/buckets/{{ primary_bucket }}/{{ path }}/?region=eu-west-1&tab=overview">
+            s3://{{ primary_bucket }}/{{ path }}
+          </a>
+
+          <br/>
+
+          <a href="https://s3.console.aws.amazon.com/s3/buckets/{{ glacier_bucket }}/{{ path }}/?region=eu-west-1&tab=overview">
+            s3://{{ glacier_bucket }}/{{ path }}
           </a>
         </div>
         {% endif %}
