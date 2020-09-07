@@ -70,12 +70,16 @@ def last_update(ingest):
     return last_event["createdDate"]
 
 
+def _parse_date(date_string):
+    return dt.datetime.strptime(date_string, "%Y-%m-%dT%H:%M:%S.%fZ")
+
+
 @app.template_filter("format_date")
 def format_date(date_string):
     if not date_string:
         return ""
 
-    d = dt.datetime.strptime(date_string, "%Y-%m-%dT%H:%M:%S.%fZ")
+    d = _parse_date(date_string)
 
     if d.date() == dt.datetime.now().date():
         return d.strftime("today @ %H:%M")
@@ -83,6 +87,55 @@ def format_date(date_string):
         return d.strftime("yesterday @ %H:%M")
     else:
         return d.strftime("%Y-%m-%d @ %H:%M")
+
+
+@app.template_filter("kibana_url")
+def kibana_url(event, api):
+    namespace = {
+        "production": "prod",
+        "staging": "staging",
+    }[api]
+
+    try:
+        ecs_service_name = {
+            "Aggregating replicas failed": "replica_aggregator",
+            "Assigning bag version failed": "bag-versioner",
+            "Replicating to Azure failed": "bag-replicator_azure",
+            "Replicating to primary location failed": "bag-replicator_primary"
+        }[event["description"]]
+    except KeyError:
+        # Handle the case where the verification message includes some extra
+        # detail for the user (e.g. a list of failed files.)
+        if event["description"].startswith("Verification (Azure) failed"):
+            ecs_service_name = "bag-verifier_azure"
+        elif event["description"].startswith("Verification (Amazon Glacier) failed"):
+            ecs_service_name = "bag-verifier_glacier"
+        else:
+            return ""
+
+    service_name = f"storage-{namespace}-{ecs_service_name}"
+
+    event_time = _parse_date(event["createdDate"])
+
+    # Slop to account for timezone weirdness.  Although Kibana stores timestamps
+    # in UTC, searches happen in your local timezone.  For Wellcome devs this
+    # will always be BST, so this is "good enough" for now.
+    #
+    # Actually localising this properly is a faff.
+    search_start = (event_time - dt.timedelta(minutes=85)).strftime("%Y-%m-%dT%H:%M")
+    search_end = (event_time + dt.timedelta(minutes=65)).strftime("%Y-%m-%dT%H:%M")
+
+    firelens_index_pattern = "978cbc80-af0d-11ea-b454-cb894ee8b269"
+
+    return (
+        "https://logging.wellcomecollection.org/app/kibana#/discover?_g="
+        f"(refreshInterval:(pause:!t,value:0),time:(from:'{search_start}',to:'{search_end}'))&"
+        f"_a=(columns:!(log),"
+        # These are very chatty apps and probably not what we wanted -- errors in
+        # these apps don't get surfaced in the ingest inspector.
+        f"filters:!(('$state':(store:appState),meta:(alias:!n,disabled:!f,index:'{firelens_index_pattern}',key:service_name,params:(query:{service_name}),type:phrase),query:(match_phrase:(service_name:{service_name})))),"
+        f"index:'{firelens_index_pattern}',interval:auto,sort:!(!('@timestamp',desc)))"
+    )
 
 
 @app.route("/ingests/<ingest_id>")
