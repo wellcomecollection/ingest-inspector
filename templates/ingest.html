@@ -107,7 +107,17 @@
         <div class="value" style="margin-bottom: 0">
           <ul>
           {% for ev in ingest.events %}
-            <li>{% if "failed" in ev.description %}<strong>{{ ev.description }}</strong>{% else %}{{ ev.description }}{% endif %}</li>
+            <li>
+              {% if "failed" in ev.description %}
+                <strong>{{ ev.description }}</strong>
+                {% set kibana_url = ev|kibana_url(api) %}
+                {% if kibana_url %}
+                  (<a href="{{ kibana_url }}">dev logs</a>)
+                {% endif %}
+              {% else %}
+                {{ ev.description }}
+              {% endif %}
+            </li>
           {% endfor %}
           </ul>
         </div>
