@@ -97,12 +97,23 @@ def kibana_url(event, api):
     }[api]
 
     try:
-        service_name = {
-            "Verification (Azure) failed": f"storage-{namespace}-bag-verifier_azure",
+        ecs_service_name = {
+            "Aggregating replicas failed": "replica_aggregator",
+            "Assigning bag version failed": "bag-versioner",
+            "Replicating to Azure failed": "bag-replicator_azure",
+            "Replicating to primary location failed": "bag-replicator_primary"
         }[event["description"]]
-        print(service_name)
     except KeyError:
-        return ""
+        # Handle the case where the verification message includes some extra
+        # detail for the user (e.g. a list of failed files.)
+        if event["description"].startswith("Verification (Azure) failed"):
+            ecs_service_name = "bag-verifier_azure"
+        elif event["description"].startswith("Verification (Amazon Glacier) failed"):
+            ecs_service_name = "bag-verifier_glacier"
+        else:
+            return ""
+
+    service_name = f"storage-{namespace}-{ecs_service_name}"
 
     event_time = _parse_date(event["createdDate"])
 
