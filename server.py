@@ -100,8 +100,9 @@ def kibana_url(event, api):
         ecs_service_name = {
             "Aggregating replicas failed": "replica_aggregator",
             "Assigning bag version failed": "bag-versioner",
+            "Replicating to Amazon Glacier failed": "bag-replicator_glacier",
             "Replicating to Azure failed": "bag-replicator_azure",
-            "Replicating to primary location failed": "bag-replicator_primary"
+            "Replicating to primary location failed": "bag-replicator_primary",
         }[event["description"]]
     except KeyError:
         # Handle the case where the verification message includes some extra
