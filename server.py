@@ -103,6 +103,7 @@ def kibana_url(event, api):
             "Replicating to Amazon Glacier failed": "bag-replicator_glacier",
             "Replicating to Azure failed": "bag-replicator_azure",
             "Replicating to primary location failed": "bag-replicator_primary",
+            "Register failed": "bag_register",
         }[event["description"]]
     except KeyError:
         # Handle the case where the verification message includes some extra
