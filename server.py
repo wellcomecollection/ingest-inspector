@@ -6,13 +6,10 @@ import os
 from flask import Flask, request, render_template, jsonify
 from wellcome_storage_service import IngestNotFound
 
-from storage_service import get_client
+from storage_service import lookup_ingest_by_id
 
 
 app = Flask(__name__)
-
-prod_api = get_client(api_url="https://api.wellcomecollection.org/storage/v1")
-staging_api = get_client(api_url="https://api-stage.wellcomecollection.org/storage/v1")
 
 
 @app.route("/")
@@ -135,45 +132,25 @@ def kibana_url(event, api):
 @app.route("/ingests/<ingest_id>")
 def lookup_ingest(ingest_id):
     try:
-        ingest = prod_api.get_ingest(ingest_id=ingest_id)
+        api, ingest = lookup_ingest_by_id(ingest_id)
+        return render_template(
+            "ingest.html",
+            title="Ingest %s" % ingest_id,
+            ingest=ingest,
+            api=api
+        )
     except IngestNotFound:
-        try:
-            ingest = staging_api.get_ingest(ingest_id=ingest_id)
-        except IngestNotFound:
-            return render_template(
-                "not_found.html",
-                title="Could not find %s" % ingest_id,
-                ingest_id=ingest_id
-            )
-        except Exception as err:
-            print("Looking up %s: %s" % (ingest_id, err))
-            return render_template(
-                "error.html",
-                title="Error looking up %s" % ingest_id,
-                ingest_id=ingest_id
-            )
-        else:
-            return render_template(
-                "ingest.html",
-                title="Ingest %s" % ingest_id,
-                ingest=ingest,
-                api="staging"
-            )
-
+        return render_template(
+            "not_found.html",
+            title="Could not find %s" % ingest_id,
+            ingest_id=ingest_id
+        )
     except Exception as err:
         print("Looking up %s: %s" % (ingest_id, err))
         return render_template(
             "error.html",
             title="Error looking up %s" % ingest_id,
             ingest_id=ingest_id
-        )
-
-    else:
-        return render_template(
-            "ingest.html",
-            title="Ingest %s" % ingest_id,
-            ingest=ingest,
-            api="production"
         )
 
 
