@@ -60,7 +60,10 @@ def last_update(ingest):
 
 
 def _parse_date(date_string):
-    return dt.datetime.strptime(date_string, "%Y-%m-%dT%H:%M:%S.%fZ")
+    try:
+        return dt.datetime.strptime(date_string, "%Y-%m-%dT%H:%M:%S.%fZ")
+    except ValueError:
+        return dt.datetime.strptime(date_string, "%Y-%m-%dT%H:%M:%SZ")
 
 
 @app.template_filter("format_date")
