@@ -5,6 +5,12 @@
     Error looking up ingest <strong>{{ ingest_id }}</strong>!
   </p>
 
+  {% if display_err %}
+  <p>
+    Here's the error from the ingest inspector: <strong>{{ display_err }}</strong>.
+  </p>
+  {% endif %}
+
   <p>
     Developers can <a href="https://logging.wellcomecollection.org/app/kibana#/discover?_g=()&_a=(columns:!(log),index:'6db79190-8556-11ea-8b79-41cfdb8d9024',interval:auto,query:(language:kuery,query:'service_name%20:%20%22*-ingests-service%22'),sort:!(!('@timestamp',desc)))">look at API logs</a> in Kibana.
   </p>

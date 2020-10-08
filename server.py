@@ -146,11 +146,13 @@ def lookup_ingest(ingest_id):
             ingest_id=ingest_id
         )
     except Exception as err:
-        print("Looking up %s: %s" % (ingest_id, err))
+        print("Error looking up %s: %s" % (ingest_id, err))
+        display_err = err if app.config["DEBUG"] else None
         return render_template(
             "error.html",
             title="Error looking up %s" % ingest_id,
-            ingest_id=ingest_id
+            ingest_id=ingest_id,
+            display_err=display_err
         )
 
 
