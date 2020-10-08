@@ -4,23 +4,15 @@ import datetime as dt
 import os
 
 from flask import Flask, request, render_template, jsonify
-from wellcome_storage_service import IngestNotFound, StorageServiceClient
+from wellcome_storage_service import IngestNotFound
+
+from storage_service import get_client
+
 
 app = Flask(__name__)
 
-prod_api = StorageServiceClient(
-    api_url="https://api.wellcomecollection.org/storage/v1",
-    client_id=os.environ["CLIENT_ID"],
-    client_secret=os.environ["CLIENT_SECRET"],
-    token_url="https://auth.wellcomecollection.org/oauth2/token"
-)
-
-staging_api = StorageServiceClient(
-    api_url="https://api-stage.wellcomecollection.org/storage/v1",
-    client_id=os.environ["CLIENT_ID"],
-    client_secret=os.environ["CLIENT_SECRET"],
-    token_url="https://auth.wellcomecollection.org/oauth2/token"
-)
+prod_api = get_client(api_url="https://api.wellcomecollection.org/storage/v1")
+staging_api = get_client(api_url="https://api-stage.wellcomecollection.org/storage/v1")
 
 
 @app.route("/")
