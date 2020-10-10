@@ -254,6 +254,11 @@ footer .heart.status-accepted {
   grid-column: 2 / 2;
 }
 
+/* https://twitter.com/thingskatedid/status/1314843881993764864 */
+.timestamp {
+  font-feature-settings: 'tnum' on;
+}
+
 /* Give a strong visual hint that there's still callback stuff to do */
 
 .status-succeeded .callback--processing,

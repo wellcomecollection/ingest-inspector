@@ -71,7 +71,7 @@
         {% endif %}
 
         <div class="label">created date:</div>
-        <div class="value" id="createdDate" title="{{ ingest.createdDate }}">
+        <div class="value timestamp" id="createdDate" title="{{ ingest.createdDate }}">
           <script>
             document.getElementById("createdDate").innerHTML = localiseDateString("{{ ingest.createdDate }}");
           </script>
@@ -81,7 +81,7 @@
         </div>
 
         <div class="label">last update:</div>
-        <div class="value" id="updatedDate" title="{{ ingest | last_update }}">
+        <div class="value timestamp" id="updatedDate" title="{{ ingest | last_update }}">
           <script>
             document.getElementById("updatedDate").innerHTML = (
               localiseDateString("{{ ingest | last_update }}") + updateDelta("{{ ingest | last_update }}")
