@@ -6,4 +6,3 @@ then
 else
   gunicorn server:app -w 4 --log-file -
 fi
-
