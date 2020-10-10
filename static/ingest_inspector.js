@@ -54,7 +54,7 @@ function renderRecentIngestsList() {
       link.innerHTML = ingest["ingestId"];
 
       listItem.appendChild(link);
-      listItem.innerHTML += " &ndash; " + ingest["space"] + " / " + ingest["externalIdentifier"];
+      listItem.innerHTML += " &ndash; " + ingest["space"] + "/" + ingest["externalIdentifier"];
       ingestList.appendChild(listItem);
     }
 
