@@ -1,9 +1,8 @@
-on: 
+on:
   push:
     branches: [ master ]
 jobs:
   repo-sync:
-    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
     - name: repo-sync
