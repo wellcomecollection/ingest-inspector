@@ -3,7 +3,7 @@ import json
 import os
 
 
-from wellcome_storage_service import IngestNotFound, StorageServiceClient
+from wellcome_storage_service import IngestNotFound, RequestsOAuthStorageServiceClient
 
 
 def _get_secret(name):
@@ -19,7 +19,7 @@ def _get_secret(name):
 
 @functools.lru_cache()
 def get_client(api_url):
-    return  StorageServiceClient(
+    return  RequestsOAuthStorageServiceClient(
         api_url=api_url,
         client_id=_get_secret("client_id"),
         client_secret=_get_secret("client_secret"),
