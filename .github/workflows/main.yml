@@ -1,6 +1,6 @@
 on:
   push:
-    branches: [ master ]
+    branches: [ live ]
 jobs:
   repo-sync:
     runs-on: ubuntu-latest
@@ -9,8 +9,8 @@ jobs:
       uses: wei/git-sync@v1
       env:
         SOURCE_REPO: "https://github.com/wellcomecollection/ingest-inspector.git"
-        SOURCE_BRANCH: "master"
+        SOURCE_BRANCH: "live"
         DESTINATION_REPO: ${{ secrets.glitch_git_URL }}
-        DESTINATION_BRANCH: "master"
+        DESTINATION_BRANCH: "live"
       with:
         args: $SOURCE_REPO $SOURCE_BRANCH $DESTINATION_REPO $DESTINATION_BRANCH
