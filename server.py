@@ -11,6 +11,11 @@ from storage_service import lookup_ingest_by_id
 
 app = Flask(__name__)
 
+# Strip the whitespace in the Jinja2 templates before rendering.  This reduces
+# the amount of data we need to spend to the client.
+app.jinja_env.trim_blocks = True
+app.jinja_env.lstrip_blocks = True
+
 
 @app.route("/")
 def index():
