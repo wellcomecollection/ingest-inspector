@@ -55,7 +55,7 @@ The app has a number of features designed to make it as easy as possible for som
 *   **It displays localised times, rather than UTC.**
 
     The storage service records timestamps in UTC, the one true timezone.
-    This is useful for coordinating across timezones, but less readable for humans.
+    This is useful for coordinating across different machines, but less readable for humans.
 
     For example, the UK runs an hour ahead of UTC during the summer.
     If you look at the UTC timestamps, it can seem like the last event was an hour ago.
