@@ -10,6 +10,8 @@ You can use the ingest ID to track the progress of your package -- see whether i
 
 The app is hosted on Glitch at <https://wellcome-ingest-inspector.glitch.me>
 
+The source code is on GitHub at <https://github.com/wellcomecollection/ingest-inspector>
+
 
 
 ## Motivation
