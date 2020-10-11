@@ -172,3 +172,14 @@ Any changes made to the app will be reflected immediately in the running version
 
 To deploy a new version to Glitch, commit your changes and push a commit to the primary branch on GitHub.
 It will be automatically pushed to Glitch using GitHub Actions (based on a [blog post by Melissa McEwen](https://dev.to/glitch/automating-my-deploys-from-github-to-glitch-2fpd)).
+
+Note: our Git hook differs from that in the blog post; we run
+
+```shell
+#!/bin/bash
+unset GIT_INDEX_FILE
+git --work-tree=/app  --git-dir=/app/.git checkout -f
+refresh
+```
+
+to trigger an immediate restart, even if the app is already running.
