@@ -12,6 +12,11 @@ The app is hosted on Glitch at <https://wellcome-ingest-inspector.glitch.me>
 
 The source code is on GitHub at <https://github.com/wellcomecollection/ingest-inspector>
 
+-   [Motivation](#motivation)
+-   [Features](#features)
+-   [Usage](#usage)
+-   [Development](#development)
+
 
 
 ## Motivation
@@ -124,3 +129,46 @@ The app has a number of features designed to make it as easy as possible for som
     If an ingest has succeeded, but the storage service has a pending callback, this gets a visual highlight:
 
     ![A line "callback status:" pending highlighted in blue.](screenshots/pending_callback.png)
+
+
+
+## Usage
+
+You can use the app by visiting <https://wellcome-ingest-inspector.glitch.me>
+
+
+
+## Development
+
+If you want to work on a development version, clone this repo and install dependencies:
+
+```console
+$ git clone https://github.com/wellcomecollection/ingest-inspector.git
+$ cd ingest-inspector
+$ pip3 install -r requirements.txt
+```
+
+Then you need to provide credentials for the app to talk to the storage service API.
+You can do this in one of two ways:
+
+*   Pass the environment variables `CLIENT_ID` and `CLIENT_SECRET`
+*   Store a JSON file at `~/.wellcome-storage/oauth-credentials.json` with the following keys:
+
+    ```json
+    {
+      "client_id": "[CLIENT_ID]",
+      "client_secret": "[CLIENT_SECRET]"
+    }
+    ```
+
+Then start the server:
+
+```console
+$ python3 server.py
+```
+
+This will start a debug version of the ingest inspector at <http://localhost:5000>.
+Any changes made to the app will be reflected immediately in the running version.
+
+To deploy a new version to Glitch, commit your changes and push a commit to the primary branch on GitHub.
+It will be automatically pushed to Glitch using GitHub Actions (based on a [blog post by Melissa McEwen](https://dev.to/glitch/automating-my-deploys-from-github-to-glitch-2fpd)).
