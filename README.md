@@ -182,4 +182,4 @@ git --work-tree=/app  --git-dir=/app/.git checkout -f
 refresh
 ```
 
-to trigger an immediate restart, even if the app is already running.
+to trigger [an immediate refresh](https://support.glitch.com/t/restarting-the-project-using-consoles-refresh-command-spawns-another-instance-of-the-project/16987), even if the app is already running.
