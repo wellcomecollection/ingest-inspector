@@ -24,6 +24,10 @@ The source code is on GitHub at **<https://github.com/wellcomecollection/ingest-
 The storage service has a JSON API which is protected by OAuth.
 Providing read-only access to the ingests data in a web app is easier than doing OAuth negotiation yourself.
 
+The ingests data isn't sensitive, so we don't need authentication in front of it.
+It mostly contains user-facing messages from the storage service, or an identifier used by one of Wellcome's catalogue databases.
+The user-facing messages can be seen in the publicly-available source code, and the identifiers don't encode any sensitive information.
+
 
 
 ## Features
