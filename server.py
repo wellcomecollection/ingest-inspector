@@ -109,6 +109,8 @@ def kibana_url(event, api):
             ecs_service_name = "bag-verifier_azure"
         elif event["description"].startswith("Verification (Amazon Glacier) failed"):
             ecs_service_name = "bag-verifier_glacier"
+        elif event["description"].startswith("Verification (primary location) failed"):
+            ecs_service_name = "bag-verifier_primary"
 
         # Normally the unpacker should include a message explaining why
         # unpacking failed; if it doesn't then we should go find out. why.
