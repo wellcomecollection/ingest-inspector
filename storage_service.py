@@ -1,25 +1,15 @@
 import functools
-import json
 import os
 
 
-from wellcome_storage_service import IngestNotFound, RequestsOAuthStorageServiceClient
+from wellcome_storage_service import IngestNotFound, RequestsOAuthStorageServiceClient, prod_client, staging_client
 
 
-def _get_secret(name):
-    try:
-        return os.environ[name.upper()]
-    except KeyError:
-        creds_path = os.path.join(
-            os.environ["HOME"], ".wellcome-storage", "oauth-credentials.json"
-        )
-        oauth_creds = json.load(open(creds_path))
-        return oauth_creds[name.lower()]
+def _client_from_environment(api_url):
+    client_id = os.environ["CLIENT_ID"]
+    client_secret = os.environ["CLIENT_SECRET"]
 
-
-@functools.lru_cache()
-def get_client(api_url):
-    return  RequestsOAuthStorageServiceClient(
+    return RequestsOAuthStorageServiceClient(
         api_url=api_url,
         client_id=_get_secret("client_id"),
         client_secret=_get_secret("client_secret"),
@@ -27,9 +17,29 @@ def get_client(api_url):
     )
 
 
+@functools.lru_cache()
+def get_prod_client():
+    try:
+        return _client_from_environment(
+            api_url="https://api.wellcomecollection.org/storage/v1"
+        )
+    except KeyError:
+        return prod_client()
+
+
+@functools.lru_cache()
+def get_staging_client():
+    try:
+        return _client_from_environment(
+            api_url="https://api-stage.wellcomecollection.org/storage/v1"
+        )
+    except KeyError:
+        return staging_client()
+
+
 def lookup_ingest_by_id(ingest_id):
-    prod_api = get_client(api_url="https://api.wellcomecollection.org/storage/v1")
-    staging_api = get_client(api_url="https://api-stage.wellcomecollection.org/storage/v1")
+    prod_api = get_prod_client()
+    staging_api = get_staging_client()
 
     try:
         ingest = prod_api.get_ingest(ingest_id=ingest_id)
