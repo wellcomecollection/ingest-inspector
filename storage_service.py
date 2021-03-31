@@ -11,8 +11,8 @@ def _client_from_environment(api_url):
 
     return RequestsOAuthStorageServiceClient(
         api_url=api_url,
-        client_id=_get_secret("client_id"),
-        client_secret=_get_secret("client_secret"),
+        client_id=client_id,
+        client_secret=client_secret,
         token_url="https://auth.wellcomecollection.org/oauth2/token"
     )
 
