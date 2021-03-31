@@ -1,3 +1,4 @@
+boto3
 Flask
 gunicorn
 wellcome_storage_service>=2.1.0,<3
