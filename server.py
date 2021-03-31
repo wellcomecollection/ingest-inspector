@@ -133,7 +133,7 @@ def kibana_url(event, api):
     search_start = (event_time - dt.timedelta(minutes=85)).strftime("%Y-%m-%dT%H:%M")
     search_end = (event_time + dt.timedelta(minutes=65)).strftime("%Y-%m-%dT%H:%M")
 
-    firelens_index_pattern = "978cbc80-af0d-11ea-b454-cb894ee8b269"
+    firelens_index_pattern = "94746ad0-81c5-11eb-b41a-c9fd641654c0"
 
     return (
         "https://logging.wellcomecollection.org/app/kibana#/discover?_g="
