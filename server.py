@@ -1,5 +1,6 @@
 # -*- encoding: utf-8
 
+import collections
 import datetime as dt
 import os
 
@@ -95,21 +96,21 @@ def kibana_url(event, api):
 
     try:
         ecs_service_name = {
-            "Aggregating replicas failed": "replica_aggregator",
-            "Assigning bag version failed": "bag-versioner",
-            "Replicating to Amazon Glacier failed": "bag-replicator_glacier",
-            "Replicating to Azure failed": "bag-replicator_azure",
-            "Replicating to primary location failed": "bag-replicator_primary",
-            "Register failed": "bag_register",
+            "Aggregating replicas": "replica_aggregator",
+            "Assigning bag version": "bag-versioner",
+            "Replicating to Amazon Glacier": "bag-replicator_glacier",
+            "Replicating to Azure": "bag-replicator_azure",
+            "Replicating to primary location": "bag-replicator_primary",
+            "Register": "bag_register",
         }[event["description"]]
     except KeyError:
         # Handle the case where the verification message includes some extra
         # detail for the user (e.g. a list of failed files.)
-        if event["description"].startswith("Verification (Azure) failed"):
+        if event["description"].startswith("Verification (Azure)"):
             ecs_service_name = "bag-verifier_azure"
-        elif event["description"].startswith("Verification (Amazon Glacier) failed"):
+        elif event["description"].startswith("Verification (Amazon Glacier)"):
             ecs_service_name = "bag-verifier_glacier"
-        elif event["description"].startswith("Verification (primary location) failed"):
+        elif event["description"].startswith("Verification (primary location)"):
             ecs_service_name = "bag-verifier_primary"
 
         # Normally the unpacker should include a message explaining why
@@ -144,6 +145,41 @@ def kibana_url(event, api):
         f"filters:!(('$state':(store:appState),meta:(alias:!n,disabled:!f,index:'{firelens_index_pattern}',key:service_name,params:(query:{service_name}),type:phrase),query:(match_phrase:(service_name:{service_name})))),"
         f"index:'{firelens_index_pattern}',interval:auto,sort:!(!('@timestamp',desc)))"
     )
+
+
+@app.template_filter("tally_event_descriptions")
+def tally_event_descriptions(events):
+    """
+    Iterates over a list of events, as received from the /ingests API.
+
+    Adds a "_count" field to each description, so we can see if/when the
+    same event occurred twice.  Also adds an "_is_repeated" field.
+    """
+    running_counter = collections.Counter()
+    all_descriptions = collections.Counter(ev["description"] for ev in events)
+
+    for ev in events:
+        running_counter[ev["description"]] += 1
+        ev["_count"] = running_counter[ev["description"]]
+
+        ev["_repeated"] = all_descriptions[ev["description"]] > 1
+
+    return events
+
+
+@app.template_filter("ordinal")
+def ordinal(n):
+    """
+    Returns the ordinal value of n, e.g. 1st, 2nd, 3rd
+
+    From https://leancrew.com/all-this/2020/06/ordinals-in-python/
+    """
+    suffix = ("th", "st", "nd", "rd") + ("th",) * 10
+    v = n % 100
+    if v > 13:
+        return f"{n}{suffix[v % 10]}"
+    else:
+        return f"{n}{suffix[v]}"
 
 
 @app.route("/ingests/<ingest_id>")

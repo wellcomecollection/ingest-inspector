@@ -106,7 +106,7 @@
         <div class="label">events:</div>
         <div class="value" style="margin-bottom: 0">
           <ul>
-          {% for ev in ingest.events %}
+          {% for ev in ingest.events|tally_event_descriptions %}
             <li title="{{ ev.createdDate }}">
               {% if "failed" in ev.description %}
                 <strong>{{ ev.description }}</strong>
@@ -116,6 +116,16 @@
                 {% endif %}
               {% else %}
                 {{ ev.description }}
+              {% endif %}
+              {% if ev._repeated %}
+              <span class="count">
+                ({{ ev._count | ordinal }} attempt
+                {%- set kibana_url = ev|kibana_url(api) -%}
+                {%- if kibana_url %}
+                  / <a href="{{ kibana_url }}">dev logs</a>
+                {%- endif -%}
+                )
+              </span>
               {% endif %}
             </li>
           {% endfor %}

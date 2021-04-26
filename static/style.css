@@ -238,6 +238,19 @@ footer .heart.status-accepted {
   color: #FEC200;  /* runny yolk */
 }
 
+.count,
+.status-accepted .count a,
+.status-processing .count a,
+.status-failed .count a {
+  color: #555;
+  background: #ededed;
+}
+
+.status-succeeded .count,
+.status-succeeded .count a {
+  color: #777;
+}
+
 .ingest_data {
   display: grid;
   grid-column-gap: 8px;
