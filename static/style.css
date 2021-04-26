@@ -249,6 +249,7 @@ footer .heart.status-accepted {
 .status-succeeded .count,
 .status-succeeded .count a {
   color: #777;
+  background: none;
 }
 
 .ingest_data {
