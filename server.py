@@ -97,7 +97,6 @@ def kibana_url(event, api):
     try:
         ecs_service_name = {
             "Aggregating replicas": "replica_aggregator",
-            "Assigning bag version": "bag-versioner",
             "Replicating to Amazon Glacier": "bag-replicator_glacier",
             "Replicating to Azure": "bag-replicator_azure",
             "Replicating to primary location": "bag-replicator_primary",
@@ -112,6 +111,8 @@ def kibana_url(event, api):
             ecs_service_name = "bag-verifier_glacier"
         elif event["description"].startswith("Verification (primary location)"):
             ecs_service_name = "bag-verifier_primary"
+        elif event["description"].startswith("Assigning bag version"):
+            ecs_service_name = "bag-versioner"
 
         # Normally the unpacker should include a message explaining why
         # unpacking failed; if it doesn't then we should go find out. why.
