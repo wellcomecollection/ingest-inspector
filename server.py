@@ -113,6 +113,8 @@ def kibana_url(event, api):
             ecs_service_name = "bag-verifier_primary"
         elif event["description"].startswith("Assigning bag version"):
             ecs_service_name = "bag-versioner"
+        elif event["description"].startswith("Register"):
+            ecs_service_name = "bag_register"
 
         # Normally the unpacker should include a message explaining why
         # unpacking failed; if it doesn't then we should go find out. why.

@@ -121,7 +121,7 @@
               <span class="count">
                 ({{ ev._count | ordinal }} attempt
                 {%- set kibana_url = ev|kibana_url(api) -%}
-                {%- if kibana_url %}
+                {%- if kibana_url and "failed" not in ev.description %}
                   / <a href="{{ kibana_url }}">dev logs</a>
                 {%- endif -%}
                 )
