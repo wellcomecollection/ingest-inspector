@@ -87,6 +87,25 @@ def format_date(date_string):
         return d.strftime("%Y-%m-%d @ %H:%M")
 
 
+def deduce_service_name_from_event_description(description):
+    for prefix, service_name in [
+        ("Aggregating replicas", "replica_aggregator"),
+        ("Replicating to Amazon Glacier", "bag-replicator_glacier"),
+        ("Replicating to Azure", "bag-replicator_azure"),
+        ("Replicating to primary location", "bag-replicator_primary"),
+        ("Register", "bag_register"),
+        ("Verification (Azure)", "bag-verifier_azure"),
+        ("Verification (Amazon Glacier)", "bag-verifier_glacier"),
+        ("Verification (primary location)", "bag-verifier_primary"),
+        ("Assigning bag version", "bag-versioner"),
+        ("Unpacking", "bag-unpacker"),
+    ]:
+        if description.startswith(prefix):
+            return service_name
+
+    raise ValueError("Unable to deduce service name from description: {description!r}")
+
+
 @app.template_filter("kibana_url")
 def kibana_url(event, api):
     namespace = {
@@ -95,35 +114,10 @@ def kibana_url(event, api):
     }[api]
 
     try:
-        ecs_service_name = {
-            "Aggregating replicas": "replica_aggregator",
-            "Replicating to Amazon Glacier": "bag-replicator_glacier",
-            "Replicating to Azure": "bag-replicator_azure",
-            "Replicating to primary location": "bag-replicator_primary",
-            "Register": "bag_register",
-        }[event["description"]]
-    except KeyError:
-        # Handle the case where the verification message includes some extra
-        # detail for the user (e.g. a list of failed files.)
-        if event["description"].startswith("Verification (Azure)"):
-            ecs_service_name = "bag-verifier_azure"
-        elif event["description"].startswith("Verification (Amazon Glacier)"):
-            ecs_service_name = "bag-verifier_glacier"
-        elif event["description"].startswith("Verification (primary location)"):
-            ecs_service_name = "bag-verifier_primary"
-        elif event["description"].startswith("Assigning bag version"):
-            ecs_service_name = "bag-versioner"
-        elif event["description"].startswith("Register"):
-            ecs_service_name = "bag_register"
-
-        # Normally the unpacker should include a message explaining why
-        # unpacking failed; if it doesn't then we should go find out. why.
-        elif event["description"] == "Unpacking failed":
-            ecs_service_name = "bag-unpacker"
-
+        ecs_service_name = deduce_service_name_from_event_description(event["description"])
+    except ValueError:
         # Otherwise, we don't know what logs to redirect to.
-        else:
-            return ""
+        return ""
 
     service_name = f"storage-{namespace}-{ecs_service_name}"
 
@@ -155,17 +149,40 @@ def tally_event_descriptions(events):
     """
     Iterates over a list of events, as received from the /ingests API.
 
-    Adds a "_count" field to each description, so we can see if/when the
-    same event occurred twice.  Also adds an "_is_repeated" field.
+    Adds three fields to each event:
+
+    -   _count shows how many times an event with the same description has
+        already occurred
+    -   _is_repeated is True if an event with the same description has
+        already occurred
+    -   _is_unmatched_start is True if an event is an "X started" without a
+        corresponding "X succeeded" or "X failed" event
+
     """
     running_counter = collections.Counter()
     all_descriptions = collections.Counter(ev["description"] for ev in events)
 
-    for ev in events:
+    for i, ev in enumerate(events):
         running_counter[ev["description"]] += 1
         ev["_count"] = running_counter[ev["description"]]
 
         ev["_repeated"] = all_descriptions[ev["description"]] > 1
+
+        future_events = events[i+1:]
+        assert ev not in future_events
+
+        if ev["description"].endswith(" started"):
+            expected_descriptions = (
+                ev["description"].replace(" started", " succeeded"),
+                ev["description"].replace(" started", " failed"),
+            )
+
+            ev["_is_unmatched_start"] = not any(
+                f_ev["description"].startswith(expected_descriptions)
+                for f_ev in future_events
+            )
+        else:
+            ev["_is_unmatched_start"] = False
 
     return events
 

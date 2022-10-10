@@ -110,22 +110,24 @@
             <li title="{{ ev.createdDate }}">
               {% if "failed" in ev.description %}
                 <strong>{{ ev.description }}</strong>
+              {% else %}
+                {{ ev.description }}
+              {% endif %}
+
+              {% if ev._repeated %}
+                <span class="count">
+                  ({{ ev._count | ordinal }} attempt
+                  {%- set kibana_url = ev|kibana_url(api) -%}
+                  {%- if kibana_url and "failed" not in ev.description %}
+                    / <a href="{{ kibana_url }}">dev logs</a>
+                  {%- endif -%}
+                  )
+                </span>
+              {% elif "failed" in ev.description or ev._is_unmatched_start %}
                 {% set kibana_url = ev|kibana_url(api) %}
                 {% if kibana_url %}
                   (<a href="{{ kibana_url }}">dev logs</a>)
                 {% endif %}
-              {% else %}
-                {{ ev.description }}
-              {% endif %}
-              {% if ev._repeated %}
-              <span class="count">
-                ({{ ev._count | ordinal }} attempt
-                {%- set kibana_url = ev|kibana_url(api) -%}
-                {%- if kibana_url and "failed" not in ev.description %}
-                  / <a href="{{ kibana_url }}">dev logs</a>
-                {%- endif -%}
-                )
-              </span>
               {% endif %}
             </li>
           {% endfor %}
