@@ -272,7 +272,7 @@ footer .heart.status-accepted {
 .label {
   grid-column: 1 / 2;
   text-align: right;
-  font-weight: 300;
+  font-weight: 575;
 }
 
 strong {
