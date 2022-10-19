@@ -97,6 +97,7 @@ def deduce_service_name_from_event_description(description):
         ("Verification (Azure)", "bag-verifier_azure"),
         ("Verification (Amazon Glacier)", "bag-verifier_glacier"),
         ("Verification (primary location)", "bag-verifier_primary"),
+        ("Verification (pre-replicating to archive storage)", "bag-verifier-pre-replication"),
         ("Assigning bag version", "bag-versioner"),
         ("Unpacking", "bag-unpacker"),
     ]:
