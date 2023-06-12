@@ -132,7 +132,7 @@ def kibana_url(event, api):
     search_start = (event_time - dt.timedelta(minutes=85)).strftime("%Y-%m-%dT%H:%M")
     search_end = (event_time + dt.timedelta(minutes=65)).strftime("%Y-%m-%dT%H:%M")
 
-    firelens_index_pattern = "94746ad0-81c5-11eb-b41a-c9fd641654c0"
+    logs_index_pattern = "cb5ba262-ec15-46e3-a4c5-5668d65fe21f"
 
     return (
         "https://logging.wellcomecollection.org/app/kibana#/discover?_g="
@@ -140,8 +140,8 @@ def kibana_url(event, api):
         f"_a=(columns:!(log),"
         # These are very chatty apps and probably not what we wanted -- errors in
         # these apps don't get surfaced in the ingest inspector.
-        f"filters:!(('$state':(store:appState),meta:(alias:!n,disabled:!f,index:'{firelens_index_pattern}',key:service_name,params:(query:{service_name}),type:phrase),query:(match_phrase:(service_name:{service_name})))),"
-        f"index:'{firelens_index_pattern}',interval:auto,sort:!(!('@timestamp',desc)))"
+        f"filters:!(('$state':(store:appState),meta:(alias:!n,disabled:!f,index:'{logs_index_pattern}',key:service_name,params:(query:{service_name}),type:phrase),query:(match_phrase:(service_name:{service_name})))),"
+        f"index:'{logs_index_pattern}',interval:auto,sort:!(!('@timestamp',desc)))"
     )
 
 
