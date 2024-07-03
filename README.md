@@ -1,5 +1,10 @@
 # wellcome-ingest-inspector
 
+> [!NOTE]
+>  **This repository is now deprecated.** This service has [moved to the storage service repository](https://github.com/wellcomecollection/storage-service/tree/main/monitoring/ingest_inspector) and is deployed in AWS.
+
+---
+
 With the ingest inspector, users can track the progress of ingests in the [Wellcome storage service](https://github.com/wellcomecollection/storage-service).
 
 Saving a new package to the storage service is a multi-step process called an **ingest**.
